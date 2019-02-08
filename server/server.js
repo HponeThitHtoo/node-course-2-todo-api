@@ -44,7 +44,7 @@ var { User } = require('./models/user');
 
 var app = express();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json()); // set middleware to use bodyParser.json()
 
 app.post('/todos', (req, res) => {
     // console.log(JSON.stringify(req.body, undefined, 2));
@@ -58,6 +58,14 @@ app.post('/todos', (req, res) => {
         res.send(doc);
     }, (e) => {
         res.status(400).send(e); // http 400 status code error putting manually
+    });
+});
+
+app.get('/todos', (req, res) => {
+    Todo.find().then((todos) => {
+        res.send({todos});
+    }, (e) => {
+        res.status(400).send(e);
     });
 });
 
