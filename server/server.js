@@ -37,6 +37,7 @@ newUser.save().then((doc) => {
 
 var express = require('express');
 var bodyParser = require('body-parser');
+var { ObjectID } = require('mongodb');
 
 var { mongoose } = require('./db/mongoose');
 var { Todo } = require('./models/todo');
@@ -66,6 +67,31 @@ app.get('/todos', (req, res) => {
         res.send({todos});
     }, (e) => {
         res.status(400).send(e);
+    });
+});
+
+// Get /todos/1234344
+app.get('/todos/:id', (req, res) => {
+    // res.send(req.params);
+    var id = req.params.id;
+
+    // Valid id using isValid
+    if (!ObjectID.isValid(id)) {
+        // 404 - send back empty send
+        return res.status(404).send();
+    }
+
+    // findById
+    Todo.findById(id).then((todo) => { // success
+        if (!todo) {
+            // if no todo - send back 400 with empty body
+            return res.status(404).send();
+        }
+        // if todo - send it back
+        res.send({todo});
+    }).catch((e) => { // error
+        // 400 - and send empty body back
+        res.status(400).send();
     });
 });
 
