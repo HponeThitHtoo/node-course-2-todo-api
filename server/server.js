@@ -35,6 +35,8 @@ newUser.save().then((doc) => {
     console.log('Unable to save', e);
 }); */
 
+require('./config/config');
+
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -45,7 +47,7 @@ var { Todo } = require('./models/todo');
 var { User } = require('./models/user');
 
 var app = express();
-const port = process.env.PORT || 3000; // for heroku
+const port = process.env.PORT;
 
 app.use(bodyParser.json()); // set middleware to use bodyParser.json()
 
