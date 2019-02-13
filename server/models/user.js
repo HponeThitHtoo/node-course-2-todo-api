@@ -62,6 +62,18 @@ UserSchema.methods.generateAuthToken = function() {
     });
 }
 
+UserSchema.methods.removeToken = function(token) {
+    var user = this;
+
+    return user.updateOne({
+        $pull: { // mongoose operator, remove items (entire object from array, entire token object > >here) from array when certain criteria is matched
+            tokens: {
+                token: token
+            }
+        }
+    });
+}
+
 UserSchema.statics.findByToken = function(token) {
     var User = this;
     var decoded;
