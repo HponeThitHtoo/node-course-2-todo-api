@@ -53,7 +53,7 @@ UserSchema.methods.toJSON = function() {
 UserSchema.methods.generateAuthToken = function() {
     var user = this;
     var access = 'auth';
-    var token = jwt.sign({_id: user._id.toHexString(), access}, '123abc').toString(); // data, secret-key
+    var token = jwt.sign({_id: user._id.toHexString(), access}, 'abc123').toString(); // data, secret-key
 
     user.tokens = user.tokens.concat([{access, token}]);
 
@@ -67,7 +67,7 @@ UserSchema.statics.findByToken = function(token) {
     var decoded;
 
     try {
-        decoded = jwt.verify(token, '123abc');
+        decoded = jwt.verify(token, 'abc123');
     } catch(e) {
         /* return new Promise((resolve, reject) => {
             reject();
@@ -85,9 +85,9 @@ UserSchema.statics.findByToken = function(token) {
 UserSchema.pre('save', function(next) {
     var user = this;
 
-var hashPassword = '$2a$10$Ra2POB4hfbEPruD6H4kEz.epzEA9CoOauTEyu8RMWAQHt/ZHujHkC';
+    // var hashPassword = '$2a$10$Ra2POB4hfbEPruD6H4kEz.epzEA9CoOauTEyu8RMWAQHt/ZHujHkC';
 
-    if (user.isModified('password')) {
+    if (user.isModified('password')) { // this will run for new created user and when modify user password
         bcrypt.genSalt(10, (err, salt) => {
             // user.password
             bcrypt.hash(user.password, salt, (err, hash) => {
